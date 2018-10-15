@@ -1,17 +1,13 @@
-/******************************************
-Treehouse Techdegree:
-FSJS project 2 - List Filter and Pagination
-******************************************/
+// ============================================
+//   Pagination Scripts
+// ============================================
 
-// Variables
-// Add variables that store DOM elements you will need to reference and/or manipulate
+// Global Variables
 const $pageHeader = $('.page-header');
 const $studentList = $('.student-list');
 const $studentItems = $('.student-item');
 
-
-// Create a function to hide all of the items in the list except for the ten you want to show
-// Tip: Keep in mind that with a list of 54 studetns, the last page will only display four
+// Function to show a single page of items according to the indicated number of items per page and the page number
 const showSinglePage = (listItem, itemsPerPage, page) => {
 
   // Loop through each of the list items
@@ -21,12 +17,12 @@ const showSinglePage = (listItem, itemsPerPage, page) => {
     if (listItem.index(this) < (itemsPerPage * (page - 1)) || listItem.index(this) >= (itemsPerPage * page)) {
 
       // Hide the list item
-      $(this).hide();
+      $(this).fadeOut(300);
     }
     // Otherwise...
     else {
       // Show the list item
-      $(this).show();
+      $(this).delay(300).fadeIn(300);
     }
 
   }); // End of each loop
@@ -35,14 +31,13 @@ const showSinglePage = (listItem, itemsPerPage, page) => {
 // Set initial page of list items
 showSinglePage($studentItems, 10, 1);
 
+
 // Function to get number of pages needed based on selected array of list items and selected number of items per page
 const pageQty = (listItems, itemsPerPage) => {
   return Math.ceil(listItems.length / itemsPerPage);
 };
 
-// console.log(pageQty($studentItems, 10));
 
-// Create and append the pagination links - Creating a function that can do this is a good approach
 // Function to dynamically create pagination links
 const createPaginationLinks = (listItems, itemsPerPage) => {
   // Create div in which to place ul of pagination links
@@ -63,7 +58,6 @@ const createPaginationLinks = (listItems, itemsPerPage) => {
 
   } // end of for loop
 
-
   // Append UL of pagination links to DIV
   $paginDIV.append($paginUL);
 
@@ -79,13 +73,9 @@ const createPaginationLinks = (listItems, itemsPerPage) => {
 createPaginationLinks($studentItems, 10);
 
 
-
-// Add functionality to the pagination buttons so that they show and hide the correct items
-// Tip: If you created a function above to show/hide list items, it could be helpful here
-
-// Strategy: Maybe I need to place students into arrays in batches by ten (or indicated quantity) and then place each batch-array into another array. Each batch-array will be selected to show by clicking the appropriate page button.
-
-const selectPage = (page) => {
+// Function to select the right batch of list items when user clicks pagination buttons
+const selectPage = () => {
+  // Get pagination links
   const $pLinks = $('.pagination a');
 
   // When a pagination link is clicked...
@@ -104,13 +94,10 @@ const selectPage = (page) => {
 
     // Show the appropriate page of items
     showSinglePage($studentItems, 10, pageNumber);
-    // console.log(e.target.textContent);
 
   }); // end of click event handler
 
 }; // end of selectPage()
 
+// Call above function
 selectPage();
-
-
-// const qtyToShow = [];
