@@ -12,13 +12,13 @@ const $studentItems = $('.student-item');
 
 // Create a function to hide all of the items in the list except for the ten you want to show
 // Tip: Keep in mind that with a list of 54 studetns, the last page will only display four
-const showSinglePage = (listItem, qty, page) => {
+const showSinglePage = (listItem, itemsPerPage, page) => {
 
   // Loop through each of the list items
   listItem.each( function(i) {
 
     // If the list item is outside the desired range...
-    if (listItem.index(this) < (qty * (page - 1)) || listItem.index(this) >= (qty * page)) {
+    if (listItem.index(this) < (itemsPerPage * (page - 1)) || listItem.index(this) >= (itemsPerPage * page)) {
 
       // Hide the list item
       $(this).hide();
@@ -34,24 +34,48 @@ const showSinglePage = (listItem, qty, page) => {
 
 showSinglePage($studentItems, 10, 6);
 
-// Function to count number of pages needed
-const qtyOfPages = (listItem) => {
-  const qtyOfListItems = () => {
-    listItem
-  };
-
+// Function to get number of pages needed based on selected array of list items and selected number of items per page
+const pageQty = (listItems, itemsPerPage) => {
+  return Math.ceil(listItems.length / itemsPerPage);
 };
-  // Note: Use Math.round() and divide or multiply by 10 as needed.
 
-// qtyOfPages($studentItems);
+// console.log(pageQty($studentItems, 10));
 
 // Create and append the pagination links - Creating a function that can do this is a good approach
 // Function to dynamically create pagination links
-const paginate = () => {
+const createPaginationLinks = (listItems, itemsPerPage) => {
+  // Create div in which to place ul of pagination links
+  let $paginDIV = $('<div></div>');
+  // Add class .pagination to div
+  $paginDIV.attr('class', 'pagination');
+  // Create ul for pagination links
+  let $paginUL = $('<ul></ul>');
+
+  // Create a pagination link for each group of list items
+  for (let i = 0; i < pageQty(listItems, itemsPerPage); i++) {
+    // Create new pagination link
+    const $paginLink = $(`<a href="#">${i + 1}</a>`);
+    // Create new LI and append pagination link to it
+    const $paginLI = $('<li></li>').append($($paginLink));
+    // Append Li to UL
+    $paginUL.append($paginLI);
+
+  } // end of for loop
 
 
+  // Append UL of pagination links to DIV
+  $paginDIV.append($paginUL);
 
-}
+  // Insert pagination DIV after list of students
+  $paginDIV.insertAfter($studentList);
+
+  // Add class .active to first pagination link
+  $('.pagination a').eq(0).attr('class', 'active');
+
+}; // End of paginate()
+
+// Call function
+createPaginationLinks($studentItems, 10);
 
 
 
