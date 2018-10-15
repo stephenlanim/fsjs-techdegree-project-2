@@ -1,4 +1,25 @@
 // ============================================
+//   Functions to Call On Page Load
+// ============================================
+$( document ).ready( function () {
+
+  // Set initial page of list items
+  showSinglePage($studentItems, 10, 1);
+
+  // Create initial pagination links
+  createPaginationLinks($studentItems, 10);
+
+  // Create search feature items
+  createSearch();
+
+  // Initialize event listeners
+  selectPage();
+  filterList($studentItems);
+
+});
+
+
+// ============================================
 //   Pagination Scripts
 // ============================================
 
@@ -26,9 +47,6 @@ const showSinglePage = (listItems, itemsPerPage, page) => {
 
   }); // end of each loop
 }; // end of showSinglePage()
-
-// Set initial page of list items
-showSinglePage($studentItems, 10, 1);
 
 
 // Function to get number of pages needed based on selected array of list items and selected number of items per page
@@ -71,10 +89,6 @@ const createPaginationLinks = (listItems, itemsPerPage) => {
 
 }; // end of paginate()
 
-// Call function
-createPaginationLinks($studentItems, 10);
-
-
 // Function to select the right batch of list items when user clicks pagination buttons
 const selectPage = () => {
   // Get pagination links
@@ -100,9 +114,6 @@ const selectPage = () => {
   }); // end of click event handler
 
 }; // end of selectPage()
-
-// Call above function
-selectPage();
 
 // ============================================
 //   Filter Scripts
@@ -138,8 +149,6 @@ const createSearch = () => {
 
 }; // end of createSearch()
 
-// Call function
-createSearch();
 
 // Function to filter page list when user clicks on search button
 const filterList = (listItems) => {
@@ -170,11 +179,21 @@ const filterList = (listItems) => {
 
 
 
+    // Get search results
+    // const $searchResults = listItems.css('display', 'block');
+
+    // Update pagination with search results
+    // showSinglePage($searchResults, 10, 1);
+
   }); // end of click handler
 
 }; // end of filterList()
 
-// Call function
-filterList($studentItems);
+
 
 // Function to display "no results" message
+
+
+// Function to reset pages when user cancels search
+
+// Cancel button inside search field = <div pseudo="-webkit-search-cancel-button" aria-label="cancel" role="button"></div> in Safari
