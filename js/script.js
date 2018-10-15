@@ -155,7 +155,6 @@ const filterList = (listItems) => {
   // Get search button
   const $searchBtn = $('#searchBtn');
 
-
   // When search button is clicked...
   $searchBtn.on('click', function (e) {
     // For each list item...
@@ -177,13 +176,24 @@ const filterList = (listItems) => {
       }
     }); // end of each loop
 
+    // Initialize arrray of search results
+    const $searchResults = [];
 
+    // For each list item...
+    listItems.each( function () {
+      // If this list item is among the search results (is shown)...
+      if (this.style.display !== 'none') {
+        // Add it to the search results array
+        $searchResults.push(this);
+        // console.log(this);
+      }
+    }); // end of  each loop
 
-    // Get search results
-    // const $searchResults = listItems.css('display', 'block');
+    // Remove current pagination links
+    $('.pagination').remove();
 
-    // Update pagination with search results
-    // showSinglePage($searchResults, 10, 1);
+    // Insert new set of pagination links to match search results
+    createPaginationLinks($searchResults, 10);
 
   }); // end of click handler
 
