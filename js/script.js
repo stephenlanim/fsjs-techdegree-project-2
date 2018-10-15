@@ -157,52 +157,96 @@ const filterList = (listItems) => {
 
   // When search button is clicked...
   $searchBtn.on('click', function (e) {
-    // For each list item...
-    listItems.each( function (){
-      // Get student name
-      const $studentName = $(this).find('h3').text().toLowerCase();
-      // Get user search input
-      const $userInput = $('#userInput').val().toLowerCase();
-      // console.log($studentName);
-      // If list item text contains text from user input...
-      if ($studentName.includes($userInput)) {
-        // Show list item
-        $(this).show();
-      }
-      // Otherwise...
-      else {
-        // Hide list item
-        $(this).hide();
-      }
-    }); // end of each loop
 
-    // Initialize arrray of search results
-    const $searchResults = [];
+    // Remove any message present on screen
+    removeScreenMessages();
 
-    // For each list item...
-    listItems.each( function () {
-      // If this list item is among the search results (is shown)...
-      if (this.style.display !== 'none') {
-        // Add it to the search results array
-        $searchResults.push(this);
-        // console.log(this);
-      }
-    }); // end of  each loop
+    // If user input is empty...
+    if ($('#userInput').val().toLowerCase() === '') {
+      // Display full list of items with original pagination
+      showSinglePage(listItems, 10, 1);
 
-    // Remove current pagination links
-    $('.pagination').remove();
+      // Remove current pagination links
+      $('.pagination').remove();
 
-    // Insert new set of pagination links to match search results
-    createPaginationLinks($searchResults, 10);
+      // Recreate default pagination links
+      createPaginationLinks(listItems, 10);
+
+      // Reactivate click listener for pagination links
+      selectPage();
+    } // and of "if user input is empty" statement
+
+
+    // Otherwise... perform appropriate tasks
+    else {
+
+      // For each list item...
+      listItems.each( function (){
+        // Get student name
+        const $studentName = $(this).find('h3').text().toLowerCase();
+        // Get user search input
+        const $userInput = $('#userInput').val().toLowerCase();
+
+        // If list item text contains text from user input...
+        if ($studentName.includes($userInput)) {
+          // Show list item
+          $(this).show();
+        }
+        // Otherwise...
+        else {
+          // Hide list item
+          $(this).hide();
+        }
+      }); // end of each loop
+
+      // Initialize arrray of search results
+      const $searchResults = [];
+
+      // If search input is NOT empty...
+      if ($('#userInput').val().toLowerCase() !== '') {
+
+        // For each list item...
+        listItems.each( function () {
+          // If this list item is among the search results (is shown)...
+          if (this.style.display !== 'none') {
+            // Add it to the search results array
+            $searchResults.push(this);
+
+          }
+        }); // end of each loop
+
+        // If there are no search results...
+        if ($searchResults.length === 0) {
+          insertNoResultsMessage();
+        }
+
+        // Remove current pagination links
+        $('.pagination').remove();
+
+        // Insert new set of pagination links to match search results
+        createPaginationLinks($searchResults, 10);
+      } // end of "if search input is NOT empty" statement
+
+    } // end of major else statement
 
   }); // end of click handler
 
 }; // end of filterList()
 
 
-
 // Function to display "no results" message
+const insertNoResultsMessage = () => {
+  // Get user search input
+  const $userInput = $('#userInput').val();
+    // Create message
+    const noResultsMessage = `<div class="message"><p>Sorry. No results were found for "${$userInput}." Please try another name.</p></div>`
+    // Insert message after page header
+    $(noResultsMessage).insertAfter($pageHeader);
+}; // end of insertNoResultsMessage()
 
+const removeScreenMessages = () => {
+  $('.message').remove();
+}; // end of removeScreenMessages()
 
 // Function to reset pages when user cancels search
 
