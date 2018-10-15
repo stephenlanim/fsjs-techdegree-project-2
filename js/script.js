@@ -3,7 +3,6 @@
 // ============================================
 
 // Global Variables
-const $pageHeader = $('.page-header');
 const $studentList = $('.student-list');
 const $studentItems = $('.student-item');
 
@@ -25,8 +24,8 @@ const showSinglePage = (listItem, itemsPerPage, page) => {
       $(this).delay(300).fadeIn(300);
     }
 
-  }); // End of each loop
-}; // End of showSinglePage()
+  }); // end of each loop
+}; // end of showSinglePage()
 
 // Set initial page of list items
 showSinglePage($studentItems, 10, 1);
@@ -40,20 +39,23 @@ const pageQty = (listItems, itemsPerPage) => {
 
 // Function to dynamically create pagination links
 const createPaginationLinks = (listItems, itemsPerPage) => {
-  // Create div in which to place ul of pagination links
-  let $paginDIV = $('<div></div>');
-  // Add class "pagination" to div
-  $paginDIV.attr('class', 'pagination');
-  // Create ul for pagination links
-  let $paginUL = $('<ul></ul>');
+  // Create div in which to place UL of pagination links
+  const $paginDIV = $('<div></div>')
+    // Add class "pagination" to DIV to apply CSS and specify node
+    .addClass('pagination');
+
+  // Create UL for pagination links
+  const $paginUL = $('<ul></ul>');
 
   // Create a pagination link for each group of list items
   for (let i = 0; i < pageQty(listItems, itemsPerPage); i++) {
     // Create new pagination link
     const $paginLink = $(`<a href="#">${i + 1}</a>`);
+
     // Create new LI and append pagination link to it
     const $paginLI = $('<li></li>').append($($paginLink));
-    // Append Li to UL
+
+    // Append LI to UL
     $paginUL.append($paginLI);
 
   } // end of for loop
@@ -67,7 +69,7 @@ const createPaginationLinks = (listItems, itemsPerPage) => {
   // Add class "active" to first pagination link
   $('.pagination a').eq(0).attr('class', 'active');
 
-}; // End of paginate()
+}; // end of paginate()
 
 // Call function
 createPaginationLinks($studentItems, 10);
@@ -101,3 +103,40 @@ const selectPage = () => {
 
 // Call above function
 selectPage();
+
+// ============================================
+//   Filter Scripts
+// ============================================
+
+// Global Variables
+const $pageHeader = $('.page-header');
+
+// Function to dynamically add search bar
+const createSearch = () => {
+  // Create search bar DIV
+  const $searchArea = $('<div></div>')
+    // Add class "student-search" to apply CSS and specify node
+    .addClass('student-search');
+
+  // Create search field w/ appropriate type and placeholder
+  const $searchField = $('<input>').attr('type', 'search').attr('placeholder', 'Search for students...');
+
+  // Remove Webkit default styles for search input
+  $searchField.css('-webkit-appearance', 'unset');
+
+  // Append search field to search area
+  $searchArea.append($searchField);
+
+  // Create search button w/ appropriate type and add text "Search" inside
+  const $searchBtn = $('<button></button>').attr('type', 'button').text('Search');
+
+  // Append search button to inside search area
+  $searchArea.append($searchBtn);
+
+  // Append search area to page header
+  $pageHeader.append($searchArea);
+
+}; // end of createSearch()
+
+// Call function
+createSearch();
