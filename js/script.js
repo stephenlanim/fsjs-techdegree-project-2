@@ -13,8 +13,11 @@ $( document ).ready( function () {
   createSearch();
 
   // Initialize event listeners
-  selectPage();
-  filterList($studentItems);
+  selectPage($studentItems);
+  searchOnBtnClick($studentItems);
+  searchOnEnter($studentItems);
+  cancelSearch($studentItems);
+  // webkitCancel($studentItems);
 
 });
 
@@ -90,7 +93,7 @@ const createPaginationLinks = (listItems, itemsPerPage) => {
 }; // end of paginate()
 
 // Function to select the right batch of list items when user clicks pagination buttons
-const selectPage = () => {
+const selectPage = (listItems) => {
   // Get pagination links
   const $pLinks = $('.pagination a');
 
@@ -109,7 +112,7 @@ const selectPage = () => {
     $(e.target).addClass('active');
 
     // Show the appropriate page of items
-    showSinglePage($studentItems, 10, pageNumber);
+    showSinglePage(listItems, 10, pageNumber);
 
   }); // end of click event handler
 
@@ -149,31 +152,31 @@ const createSearch = () => {
 
 }; // end of createSearch()
 
-
-// Function to filter page list when user clicks on search button
-const filterList = (listItems) => {
+// When user clicks on search button...
+const searchOnBtnClick = (listItems) => {
   // Get search button
   const $searchBtn = $('#searchBtn');
 
   // When search button is clicked...
   $searchBtn.on('click', function (e) {
 
+    filterList(listItems);
+
+  }); // end of click handler
+
+};
+
+// Function to filter page list
+const filterList = (listItems) => {
+
     // Remove any message present on screen
     removeScreenMessages();
 
     // If user input is empty...
     if ($('#userInput').val().toLowerCase() === '') {
-      // Display full list of items with original pagination
-      showSinglePage(listItems, 10, 1);
 
-      // Remove current pagination links
-      $('.pagination').remove();
+      resetPage(listItems);
 
-      // Recreate default pagination links
-      createPaginationLinks(listItems, 10);
-
-      // Reactivate click listener for pagination links
-      selectPage();
     } // and of "if user input is empty" statement
 
 
@@ -199,8 +202,8 @@ const filterList = (listItems) => {
         }
       }); // end of each loop
 
-      // Initialize arrray of search results
-      const $searchResults = [];
+      // Initialize array of search results
+      const searchResults = [];
 
       // If search input is NOT empty...
       if ($('#userInput').val().toLowerCase() !== '') {
@@ -210,26 +213,25 @@ const filterList = (listItems) => {
           // If this list item is among the search results (is shown)...
           if (this.style.display !== 'none') {
             // Add it to the search results array
-            $searchResults.push(this);
-
+            searchResults.push(this);
           }
         }); // end of each loop
 
         // If there are no search results...
-        if ($searchResults.length === 0) {
+        if (searchResults.length === 0) {
           insertNoResultsMessage();
+
+          // Remove current pagination links
+          $('.pagination').remove();
+        }
+        // Otherwise,if there are search results
+        else {
+          resetPage($(searchResults));
         }
 
-        // Remove current pagination links
-        $('.pagination').remove();
-
-        // Insert new set of pagination links to match search results
-        createPaginationLinks($searchResults, 10);
       } // end of "if search input is NOT empty" statement
 
     } // end of major else statement
-
-  }); // end of click handler
 
 }; // end of filterList()
 
@@ -248,6 +250,61 @@ const removeScreenMessages = () => {
   $('.message').remove();
 }; // end of removeScreenMessages()
 
-// Function to reset pages when user cancels search
 
+// Function to reset page main content and pagination links
+const resetPage = (listItems) => {
+  // Display full list of items with original pagination
+  showSinglePage(listItems, 10, 1);
+
+  // Remove current pagination links
+  $('.pagination').remove();
+
+  // Recreate default pagination links
+  createPaginationLinks(listItems, 10);
+
+  // Reactivate click listener for pagination links
+  selectPage(listItems);
+}; // end of resetPage()
+
+// Function to activate search feature when user hits Enter key
+const searchOnEnter = (listItems) => {
+  $('#userInput').on('keyup', function (e) {
+
+    // If user input is empty...
+    if (e.key === 'Enter') {
+
+      // resetPage(listItems);
+      filterList(listItems);
+      // cancelSearch(listItems);
+
+    } // and of "if user input is empty" statement
+  });
+}; // end of searchOnEnter()
+
+// Function to reset page if user empties the search field
+const cancelSearch = (listItems) => {
+  $('#userInput').on('keyup', function (e) {
+
+    // If user input is empty...
+    if ($('#userInput').val().toLowerCase() === '') {
+
+      resetPage(listItems);
+
+    } // and of "if user input is empty" statement
+  });
+}; // end of cancelSearch()
+
+
+// Function to reset pages when user cancels search in a webkit browser
+const webkitCancel = (listItems) => {
+  // Get "x" cancel button in webkit browser
+  const $pseudoCancelBtn = $('[pseudo=-webkit-search-cancel-button]');
+  // When user clicks cancel button...
+  $pseudoCancelBtn.on('click', () => {
+    console.log(this);
+    // resetPage(listItems);
+  });
+}; // end of webkitCancel()
 // Cancel button inside search field = <div pseudo="-webkit-search-cancel-button" aria-label="cancel" role="button"></div> in Safari
+
+// 10-15-2018: I ultimately could not get this webkitCancel() function to work because the element I want to select was generated by the User Agent in the Shadow DOM and is therefore closed (cannot be accessed, let alone manipulated). I can only access Shadow DOM elements that I create. Disappointing, but I've covered every other uer interaction I can think of.
