@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 // ============================================
 //   Functions to Call On Page Load
 // ============================================
@@ -241,7 +242,7 @@ const insertNoResultsMessage = () => {
   // Get user search input
   const $userInput = $('#userInput').val();
     // Create message
-    const noResultsMessage = `<div class="message"><p>Sorry. No results were found for "${$userInput}." Please try another name.</p></div>`
+    const noResultsMessage = `<div class="message"><p>Sorry. No results were found for "${$userInput}." Please try another name.</p></div>`;
     // Insert message after page header
     $(noResultsMessage).insertAfter($pageHeader);
 }; // end of insertNoResultsMessage()
@@ -259,6 +260,9 @@ const resetPage = (listItems) => {
   // Remove current pagination links
   $('.pagination').remove();
 
+  // Remove any message present on screen
+  removeScreenMessages();
+
   // Recreate default pagination links
   createPaginationLinks(listItems, 10);
 
@@ -273,9 +277,7 @@ const searchOnEnter = (listItems) => {
     // If user input is empty...
     if (e.key === 'Enter') {
 
-      // resetPage(listItems);
       filterList(listItems);
-      // cancelSearch(listItems);
 
     } // and of "if user input is empty" statement
   });
