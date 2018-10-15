@@ -7,13 +7,13 @@ const $studentList = $('.student-list');
 const $studentItems = $('.student-item');
 
 // Function to show a single page of items according to the indicated number of items per page and the page number
-const showSinglePage = (listItem, itemsPerPage, page) => {
+const showSinglePage = (listItems, itemsPerPage, page) => {
 
   // Loop through each of the list items
-  listItem.each( function(i) {
+  listItems.each( function(i) {
 
     // If the list item is outside the desired range...
-    if (listItem.index(this) < (itemsPerPage * (page - 1)) || listItem.index(this) >= (itemsPerPage * page)) {
+    if (listItems.index(this) < (itemsPerPage * (page - 1)) || listItems.index(this) >= (itemsPerPage * page)) {
 
       // Hide the list item
       $(this).fadeOut(300);
@@ -119,7 +119,7 @@ const createSearch = () => {
     .addClass('student-search');
 
   // Create search field w/ appropriate type and placeholder
-  const $searchField = $('<input>').attr('type', 'search').attr('placeholder', 'Search for students...');
+  const $searchField = $('<input>').attr('id', 'userInput').attr('type', 'search').attr('placeholder', 'Search for students...');
 
   // Remove Webkit default styles for search input
   $searchField.css('-webkit-appearance', 'unset');
@@ -127,8 +127,8 @@ const createSearch = () => {
   // Append search field to search area
   $searchArea.append($searchField);
 
-  // Create search button w/ appropriate type and add text "Search" inside
-  const $searchBtn = $('<button></button>').attr('type', 'button').text('Search');
+  // Create search button w/ appropriate type and ID and then add text "Search" inside
+  const $searchBtn = $('<button></button>').attr('type', 'button').attr('id', 'searchBtn').text('Search');
 
   // Append search button to inside search area
   $searchArea.append($searchBtn);
@@ -140,3 +140,41 @@ const createSearch = () => {
 
 // Call function
 createSearch();
+
+// Function to filter page list when user clicks on search button
+const filterList = (listItems) => {
+  // Get search button
+  const $searchBtn = $('#searchBtn');
+
+
+  // When search button is clicked...
+  $searchBtn.on('click', function (e) {
+    // For each list item...
+    listItems.each( function (){
+      // Get student name
+      const $studentName = $(this).find('h3').text().toLowerCase();
+      // Get user search input
+      const $userInput = $('#userInput').val().toLowerCase();
+      // console.log($studentName);
+      // If list item text contains text from user input...
+      if ($studentName.includes($userInput)) {
+        // Show list item
+        $(this).show();
+      }
+      // Otherwise...
+      else {
+        // Hide list item
+        $(this).hide();
+      }
+    }); // end of each loop
+
+
+
+  }); // end of click handler
+
+}; // end of filterList()
+
+// Call function
+filterList($studentItems);
+
+// Function to display "no results" message

@@ -40,8 +40,14 @@ body{
       padding: 8px 15px;
       font-size: 14px;
       background-color: #4ba6c3;
-      color: #fff
+      color: #fff;
+      transition: all 0.3s ease-out;
     }
+
+      .page-header .student-search button:hover,
+      .page-header .student-search button:focus {
+        background-color: #187390;
+      }
 
 .student-list{}
 
@@ -99,7 +105,7 @@ body{
   margin: 40px 0 0 0;
   text-align: center;
 }
- 
+
   .pagination li{
     display: inline;
   }
