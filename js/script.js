@@ -32,7 +32,8 @@ const showSinglePage = (listItem, itemsPerPage, page) => {
   }); // End of each loop
 }; // End of showSinglePage()
 
-showSinglePage($studentItems, 10, 6);
+// Set initial page of list items
+showSinglePage($studentItems, 10, 1);
 
 // Function to get number of pages needed based on selected array of list items and selected number of items per page
 const pageQty = (listItems, itemsPerPage) => {
@@ -46,7 +47,7 @@ const pageQty = (listItems, itemsPerPage) => {
 const createPaginationLinks = (listItems, itemsPerPage) => {
   // Create div in which to place ul of pagination links
   let $paginDIV = $('<div></div>');
-  // Add class .pagination to div
+  // Add class "pagination" to div
   $paginDIV.attr('class', 'pagination');
   // Create ul for pagination links
   let $paginUL = $('<ul></ul>');
@@ -69,7 +70,7 @@ const createPaginationLinks = (listItems, itemsPerPage) => {
   // Insert pagination DIV after list of students
   $paginDIV.insertAfter($studentList);
 
-  // Add class .active to first pagination link
+  // Add class "active" to first pagination link
   $('.pagination a').eq(0).attr('class', 'active');
 
 }; // End of paginate()
@@ -85,11 +86,31 @@ createPaginationLinks($studentItems, 10);
 // Strategy: Maybe I need to place students into arrays in batches by ten (or indicated quantity) and then place each batch-array into another array. Each batch-array will be selected to show by clicking the appropriate page button.
 
 const selectPage = (page) => {
-  // Note: Use Math.round() and divide or multiply by 10 as needed.
+  const $pLinks = $('.pagination a');
 
+  // When a pagination link is clicked...
+  $pLinks.on('click', (e) => {
+    // Get page number
+    const pageNumber = e.target.textContent;
 
-};
+    // Prevent default behavior
+    e.preventDefault();
 
+    // Remove class "active" from all links
+    $pLinks.removeClass('active');
+
+    // Add class "active" to clicked link
+    $(e.target).addClass('active');
+
+    // Show the appropriate page of items
+    showSinglePage($studentItems, 10, pageNumber);
+    // console.log(e.target.textContent);
+
+  }); // end of click event handler
+
+}; // end of selectPage()
+
+selectPage();
 
 
 // const qtyToShow = [];
